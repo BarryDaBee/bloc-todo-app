@@ -4,21 +4,27 @@ import 'package:meta/meta.dart';
 
 part 'todo_state.dart';
 
-class TodoCubit extends Cubit<TodoState> {
-  TodoCubit() : super(const TodoState([]));
+class TodoCubit extends Cubit<TaskListState> {
+  TodoCubit() : super(TaskInitialState());
 
-  addTodo(Todo todo) {
+  addTask(Todo todo) {
     List<Todo> newTodos = List.from(state.todos);
     newTodos.add(todo);
     emit(
-      TodoState(
+      NewTaskAddedState(
         newTodos,
       ),
     );
   }
 
+  removeTask(int index) {
+    List<Todo> newTodos = List.from(state.todos);
+    newTodos.removeAt(index);
+    emit(TaskRemovedState(newTodos, state.todos[index]));
+  }
+
   toggleDone(int index) {
     state.todos[index].toggleDone();
-    emit(TodoState(state.todos));
+    emit(TaskUpdatedState(state.todos, state.todos[index]));
   }
 }
