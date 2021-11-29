@@ -1,56 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-const TextTheme darkTextTheme = TextTheme(
-  headline1: TextStyle(
+TextTheme darkTextTheme = TextTheme(
+  headline1: GoogleFonts.anticSlab(
     fontSize: 32,
     fontWeight: FontWeight.bold,
-    color: Color(0xFFDADADA),
+    color: const Color(0xFFDADADA),
   ),
-  subtitle1: TextStyle(
+  subtitle1: GoogleFonts.anticSlab(
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: Color(0xFF575767),
+    color: const Color(0xFF575767),
   ),
-  headline3: TextStyle(
-    color: Color(0xFFDADADA),
+  headline3: GoogleFonts.anticSlab(
+    color: const Color(0xFFDADADA),
     fontSize: 18,
     fontWeight: FontWeight.bold,
   ),
-  headline4: TextStyle(
-    color: Color(0xFFDADADA),
+  headline4: GoogleFonts.anticSlab(
+    color: const Color(0xFFDADADA),
     fontSize: 18,
     fontWeight: FontWeight.w500,
   ),
-  bodyText1: TextStyle(
+  bodyText1: GoogleFonts.anticSlab(
     fontSize: 18,
-    color: Color(0xFF575767),
+    color: const Color(0xFF575767),
     fontWeight: FontWeight.w500,
   ),
 );
 
-const TextTheme lightTextTheme = TextTheme(
-  headline1: TextStyle(
+TextTheme lightTextTheme = TextTheme(
+  headline1: GoogleFonts.anticSlab(
     fontSize: 32,
     fontWeight: FontWeight.bold,
     color: Colors.black,
   ),
-  subtitle1: TextStyle(
+  subtitle1: GoogleFonts.anticSlab(
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: Color(0xFF575767),
+    color: const Color(0xFF575767),
   ),
-  headline3: TextStyle(
+  headline3: GoogleFonts.anticSlab(
     fontSize: 18,
     fontWeight: FontWeight.bold,
   ),
-  headline4: TextStyle(
-    color: Color(0xFF575767),
+  headline4: GoogleFonts.anticSlab(
+    color: const Color(0xFF575767),
     fontSize: 18,
     fontWeight: FontWeight.w500,
   ),
-  bodyText1: TextStyle(
+  bodyText1: GoogleFonts.anticSlab(
     fontSize: 18,
-    color: Color(0xFF575767),
+    color: const Color(0xFF575767),
     fontWeight: FontWeight.w500,
   ),
 );

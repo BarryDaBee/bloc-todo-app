@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: lightTextTheme,
       ),
+      debugShowCheckedModeBanner: false,
       home: BlocProvider(
         create: (context) => TodoCubit(),
         child: const TodoView(),

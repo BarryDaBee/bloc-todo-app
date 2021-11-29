@@ -8,4 +8,10 @@ class Todo {
   });
 
   void toggleDone() => isDone = !isDone;
+
+  @override
+  String toString() {
+    return "(subject: $subject, isDone: $isDone)";
+    super.toString();
+  }
 }

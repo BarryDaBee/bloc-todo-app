@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc_todo_list/business_logic/cubits/todo_cubit.dart';
 import 'package:bloc_todo_list/data/models/todo.dart';
 import 'package:bloc_todo_list/presentation/shared/colors.dart';
@@ -15,6 +16,39 @@ class TodoView extends StatefulWidget {
 
 class _TodoViewState extends State<TodoView> {
   final TextEditingController _taskTextController = TextEditingController();
+  DateTime _dateTime = DateTime.now();
+  late final Timer timer;
+  @override
+  void initState() {
+    timer = Timer.periodic(const Duration(days: 1), (timer) {
+      setState(() {
+        _dateTime = DateTime.now();
+      });
+    });
+    super.initState();
+  }
+
+  String getCurrentDate() {
+    int dayIndex = _dateTime.day;
+    int monthIndex = _dateTime.month;
+    int year = _dateTime.year;
+
+    List<String> months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    return "${months[monthIndex - 1]} $dayIndex, $year";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +85,9 @@ class _TodoViewState extends State<TodoView> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 17),
           children: [
-            marginY(76),
+            marginY(56),
             Text(
-              "Nov 28, 2021",
+              getCurrentDate(),
               style: Theme.of(context).textTheme.headline1,
             ),
             marginY(10),
@@ -65,43 +99,102 @@ class _TodoViewState extends State<TodoView> {
                 );
               },
             ),
-            marginY(34),
+            marginY(15),
+            const Divider(
+              height: 4,
+              thickness: 1,
+            ),
+            marginY(15),
             BlocBuilder<TodoCubit, TaskListState>(
               builder: (context, state) {
                 return Column(
                   children: [
                     Row(
                       children: [
-                        Text("All tasks",
+                        Text("All",
                             style: Theme.of(context).textTheme.headline3),
                       ],
                     ),
                     marginY(20),
-                    ...List.generate(
-                      state.todos.length,
-                      (index) => Dismissible(
-                        key: UniqueKey(),
-                        child: TodoWidget(
-                          todo: state.todos[index],
-                          onChanged: (_) {
-                            context.read<TodoCubit>().toggleDone(index);
+                    if (state.todos.isEmpty)
+                      Text(
+                        "Click \"+\" to add a new task",
+                        style: Theme.of(context).textTheme.headline3,
+                      )
+                    else
+                      ...List.generate(
+                        state.todos.length,
+                        (index) => Dismissible(
+                          key: UniqueKey(),
+                          child: TodoWidget(
+                            todo: state.todos[index],
+                            onChanged: (_) {
+                              context.read<TodoCubit>().toggleDone(index);
+                            },
+                          ),
+                          onDismissed: (_) {
+                            context.read<TodoCubit>().removeTask(index);
                           },
+                          background: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.delete, color: Colors.white),
+                                marginX(20),
+                                Text(
+                                  "Delete",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3!
+                                      .copyWith(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          secondaryBackground: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Delete",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3!
+                                      .copyWith(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                      ),
+                                ),
+                                marginX(20),
+                                const Icon(Icons.delete, color: Colors.white),
+                              ],
+                            ),
+                          ),
                         ),
-                        onDismissed: (_) {
-                          context.read<TodoCubit>().removeTask(index);
-                        },
                       ),
-                    ),
                   ],
                 );
               },
-            )
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.purple,
-        child: Icon(Icons.add, size: 25),
+        child: const Icon(Icons.add, size: 25),
         onPressed: () {
           showModalBottomSheet(
               context: context,
@@ -110,6 +203,7 @@ class _TodoViewState extends State<TodoView> {
                 return BlocProvider.value(
                   value: context.read<TodoCubit>(),
                   child: BottomSheet(
+                    backgroundColor: Colors.white,
                     builder: (_) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -189,5 +283,11 @@ class _TodoViewState extends State<TodoView> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 }
